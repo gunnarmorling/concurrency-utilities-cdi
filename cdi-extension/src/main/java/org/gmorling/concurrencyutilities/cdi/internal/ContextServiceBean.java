@@ -15,18 +15,18 @@
  */
 package org.gmorling.concurrencyutilities.cdi.internal;
 
-import javax.enterprise.concurrent.ManagedExecutorService;
+import javax.enterprise.concurrent.ContextService;
 
 /**
- * Bean representing the default {@link ManagedExecutorService} bound to
- * java:comp/DefaultManagedExecutorService.
+ * Bean representing the default {@link ContextService} bound to
+ * java:comp/DefaultContextService.
  *
  * @author Gunnar Morling
  */
-public class ManagedExecutorServiceBean extends CurrencyUtilityBean<ManagedExecutorService> {
+public class ContextServiceBean extends CurrencyUtilityBean<ContextService> {
 
     @Override
     public Class<?> getBeanClass() {
-        return ManagedExecutorService.class;
+        return ContextService.class;
     }
 }

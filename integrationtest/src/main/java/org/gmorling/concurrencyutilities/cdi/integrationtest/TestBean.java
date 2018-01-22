@@ -15,16 +15,38 @@
  */
 package org.gmorling.concurrencyutilities.cdi.integrationtest;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
+import javax.enterprise.concurrent.ContextService;
 import javax.enterprise.concurrent.ManagedExecutorService;
+import javax.enterprise.concurrent.ManagedScheduledExecutorService;
+import javax.enterprise.concurrent.ManagedThreadFactory;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+/**
+ * Test bean for injecting JSR 236 resources.
+ *
+ * @author Gunnar Morling
+ */
+@ApplicationScoped
 public class TestBean {
 
     @Inject
     private ManagedExecutorService executorService;
+
+    @Inject
+    private ManagedScheduledExecutorService scheduledExecutorService;
+
+    @Inject
+    private ManagedThreadFactory threadFactory;
+
+    @Inject
+    private ContextService contextService;
 
     public String createGreetingViaManagedExecutorService(String name) {
         Future<String> task = executorService.submit( () -> "Hello, " + name + "!" );
@@ -33,7 +55,47 @@ public class TestBean {
             return task.get();
         }
         catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException( e );
         }
+    }
+
+    public String createGreetingViaManagedScheduledExecutorService(String name) {
+        Future<String> task = scheduledExecutorService.schedule(
+                () -> "Hello, " + name + "!",
+                1,
+                TimeUnit.MILLISECONDS
+        );
+
+        try {
+            return task.get();
+        }
+        catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException( e );
+        }
+    }
+
+    public String createGreetingViaManagedThreadFactory(String name) {
+        AtomicReference<String> greeting = new AtomicReference<String>();
+        CountDownLatch barrier = new CountDownLatch(1);
+
+        threadFactory.newThread(
+                () -> {
+                    greeting.set( "Hello, " + name + "!" );
+                    barrier.countDown();
+                }
+        ).run();
+
+        try {
+            barrier.await();
+        }
+        catch (InterruptedException e) {
+            throw new RuntimeException( e );
+        }
+
+        return greeting.get();
+    }
+
+    public boolean canInjectContextService() {
+        return contextService != null;
     }
 }

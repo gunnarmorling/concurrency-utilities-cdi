@@ -22,7 +22,10 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 
+import org.gmorling.concurrencyutilities.cdi.internal.ContextServiceBean;
 import org.gmorling.concurrencyutilities.cdi.internal.ManagedExecutorServiceBean;
+import org.gmorling.concurrencyutilities.cdi.internal.ManagedScheduledExecutorServiceBean;
+import org.gmorling.concurrencyutilities.cdi.internal.ManagedThreadFactoryBean;
 
 /**
  * A CDI portable extension for obtaining the JSR 236 resources such as
@@ -35,5 +38,8 @@ public class ConcurrencyUtilitiesCdiExtension implements Extension {
 
     public void afterBeanDiscovery(@Observes AfterBeanDiscovery abd, BeanManager bm) {
         abd.addBean( new ManagedExecutorServiceBean() );
+        abd.addBean( new ManagedScheduledExecutorServiceBean() );
+        abd.addBean( new ManagedThreadFactoryBean() );
+        abd.addBean( new ContextServiceBean() );
     }
 }

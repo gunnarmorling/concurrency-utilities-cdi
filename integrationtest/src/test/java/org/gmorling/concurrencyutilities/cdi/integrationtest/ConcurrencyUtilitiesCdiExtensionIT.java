@@ -55,7 +55,22 @@ public class ConcurrencyUtilitiesCdiExtensionIT {
     }
 
     @Test
-    public void should_create_greeting() {
-        Assert.assertEquals("Hello, Earthling!", testBean.createGreetingViaManagedExecutorService("Earthling"));
+    public void canUseManagedExecutorService() {
+        Assert.assertEquals( "Hello, Earthling!", testBean.createGreetingViaManagedExecutorService( "Earthling" ) );
+    }
+
+    @Test
+    public void canUseManagedScheduledExecutorService() {
+        Assert.assertEquals( "Hello, Earthling!", testBean.createGreetingViaManagedExecutorService( "Earthling" ) );
+    }
+
+    @Test
+    public void canUseManagedThreadFactory() {
+        Assert.assertEquals( "Hello, Earthling!", testBean.createGreetingViaManagedThreadFactory( "Earthling" ) );
+    }
+
+    @Test
+    public void canInjectContextService() {
+        Assert.assertTrue( testBean.canInjectContextService() );
     }
 }

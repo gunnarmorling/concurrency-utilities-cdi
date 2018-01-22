@@ -15,18 +15,18 @@
  */
 package org.gmorling.concurrencyutilities.cdi.internal;
 
-import javax.enterprise.concurrent.ManagedExecutorService;
+import javax.enterprise.concurrent.ManagedThreadFactory;
 
 /**
- * Bean representing the default {@link ManagedExecutorService} bound to
- * java:comp/DefaultManagedExecutorService.
+ * Bean representing the default {@link ManagedThreadFactory} bound to
+ * java:comp/DefaultManagedThreadFactory.
  *
  * @author Gunnar Morling
  */
-public class ManagedExecutorServiceBean extends CurrencyUtilityBean<ManagedExecutorService> {
+public class ManagedThreadFactoryBean extends CurrencyUtilityBean<ManagedThreadFactory> {
 
     @Override
     public Class<?> getBeanClass() {
-        return ManagedExecutorService.class;
+        return ManagedThreadFactory.class;
     }
 }
